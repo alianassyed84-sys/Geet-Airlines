@@ -1,0 +1,18 @@
+# Build output
+target/
+*.class
+
+# Local dev server runtime & cached maven dependencies
+work/
+.impeccable/
+
+# Temporary and ticket files
+ticket_*.txt
+*.log
+
+# Maven wrapper cache
+.mvn/apache-maven-*/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "public",
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "https://geet-airlines-java.onrender.com/:path*"
+    }
+  ]
+}
