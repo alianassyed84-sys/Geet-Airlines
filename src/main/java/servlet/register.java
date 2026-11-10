@@ -72,7 +72,7 @@ public class register extends HttpServlet {
             response.sendRedirect("home.jsp");
         } catch (Exception e) {
             getServletContext().log("Registration failed", e);
-            request.getSession().setAttribute("error", "Registration could not be completed. Check the database connection and try again.");
+            request.getSession().setAttribute("error", "Registration could not be completed (" + e.getMessage() + "). Check database settings and try again.");
             response.sendRedirect("register.jsp");
         }
     }
