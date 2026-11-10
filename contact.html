@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1618">
+  <title>Contact Us | Geet Airlines</title>
+  <link rel="stylesheet" href="css/geet.css">
+</head>
+<body class="departure-page">
+<div class="departure-shell">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Geet Airlines home">
+      <svg class="brand-mark" viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+      <span>GEET AIRLINES</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Flights</a>
+      <a href="viewflights.html">All flights</a>
+      <a class="active" href="contact.html">Contact</a>
+      <a href="addflights.html">Add flights</a>
+      <a href="viewbookings.html">Bookings</a>
+      <a class="logout-link" href="login.html"><span aria-hidden="true">↗</span> Sign In</a>
+    </nav>
+  </header>
+  <main class="inner-main">
+    <h1 class="page-title">Contact Us</h1>
+    <div id="cNotice" class="page-notice success" style="display:none">Thank you for reaching out. We will respond shortly!</div>
+    <div class="contact-wrap">
+      <p style="color:var(--muted);margin:0 0 20px;font-size:13px;letter-spacing:.04em">Leave a message — we will be happy to help you.</p>
+      <form class="form-card" id="contactForm">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="cname">Name</label>
+            <input type="text" id="cname" required placeholder="Your name">
+          </div>
+          <div class="form-field">
+            <label for="cemail">Email address</label>
+            <input type="email" id="cemail" required placeholder="you@example.com">
+          </div>
+          <div class="form-field">
+            <label for="cmsg">Message</label>
+            <textarea id="cmsg" rows="5" required placeholder="How can we help?"></textarea>
+          </div>
+        </div>
+        <div class="form-submit-row">
+          <button class="geet-btn" type="submit">Send Message</button>
+        </div>
+      </form>
+    </div>
+  </main>
+  <footer class="site-footer"><span>Geet Airlines</span><span>Plan well. Fly easy.</span></footer>
+</div>
+
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  document.getElementById("cNotice").style.display = "block";
+  document.getElementById("contactForm").reset();
+});
+</script>
+</body>
+</html>

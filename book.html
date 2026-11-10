@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1618">
+  <title>Book Flight | Geet Airlines</title>
+  <link rel="stylesheet" href="css/geet.css">
+</head>
+<body class="departure-page">
+<div class="departure-shell">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Geet Airlines home">
+      <svg class="brand-mark" viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+      <span>GEET AIRLINES</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Flights</a>
+      <a href="viewflights.html">All flights</a>
+      <a href="contact.html">Contact</a>
+      <a href="addflights.html">Add flights</a>
+      <a href="viewbookings.html">Bookings</a>
+      <a class="logout-link" href="login.html"><span aria-hidden="true">↗</span> Sign In</a>
+    </nav>
+  </header>
+  <main class="inner-main">
+    <h1 class="page-title">Book Flight</h1>
+    <form class="form-card" id="bookForm">
+      <div class="form-row">
+        <div class="form-field">
+          <label>Flight number</label>
+          <input type="text" id="flightnumber" readonly>
+        </div>
+        <div class="form-field">
+          <label>Provider</label>
+          <input type="text" id="provider" readonly>
+        </div>
+        <div class="form-field">
+          <label>Source</label>
+          <input type="text" id="source" readonly>
+        </div>
+        <div class="form-field">
+          <label>Destination</label>
+          <input type="text" id="destination" readonly>
+        </div>
+        <div class="form-field">
+          <label>Total flight time</label>
+          <input type="text" id="duration" readonly>
+        </div>
+        <div class="form-field">
+          <label>Price (₹)</label>
+          <input type="number" id="price" readonly>
+        </div>
+        <div class="form-field">
+          <label for="fdate">Flight date</label>
+          <input type="date" id="fdate" name="fdate" required>
+        </div>
+        <div class="form-field">
+          <label for="ftime">Flight time</label>
+          <input type="time" id="ftime" name="ftime" required value="09:00">
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin:0 0 16px;letter-spacing:.03em">This demo records a reservation only. No payment is charged.</p>
+      <div class="form-submit-row">
+        <button class="geet-btn" type="submit"><span aria-hidden="true">✈</span> Reserve Flight</button>
+        <a class="geet-btn secondary" href="index.html">← Back</a>
+      </div>
+    </form>
+  </main>
+  <footer class="site-footer"><span>Geet Airlines</span><span>Plan well. Fly easy.</span></footer>
+</div>
+
+<script>
+const DEFAULT_FLIGHTS = [
+    { id: 1, flightnumber: "AI101", provider: "Air India", source: "Delhi", destination: "Mumbai", duration: "2h 10m", price: 5499 },
+    { id: 2, flightnumber: "6E205", provider: "IndiGo", source: "Mumbai", destination: "Bengaluru", duration: "1h 45m", price: 4299 },
+    { id: 3, flightnumber: "SG312", provider: "SpiceJet", source: "Delhi", destination: "Jaipur", duration: "1h 00m", price: 2499 },
+    { id: 4, flightnumber: "UK810", provider: "Vistara", source: "Delhi", destination: "Bengaluru", duration: "2h 45m", price: 6800 },
+    { id: 5, flightnumber: "AI402", provider: "Air India", source: "Mumbai", destination: "Chennai", duration: "2h 00m", price: 4800 },
+    { id: 6, flightnumber: "6E508", provider: "IndiGo", source: "Hyderabad", destination: "Kolkata", duration: "2h 15m", price: 5120 }
+];
+
+const params = new URLSearchParams(window.location.search);
+const id = parseInt(params.get("id")) || 1;
+const saved = localStorage.getItem("geet_flights");
+const flights = saved ? JSON.parse(saved) : DEFAULT_FLIGHTS;
+const current = flights.find(f => f.id === id) || flights[0];
+
+document.getElementById("flightnumber").value = current.flightnumber;
+document.getElementById("provider").value = current.provider;
+document.getElementById("source").value = current.source;
+document.getElementById("destination").value = current.destination;
+document.getElementById("duration").value = current.duration;
+document.getElementById("price").value = current.price;
+
+const dateInput = document.getElementById("fdate");
+const today = new Date().toISOString().split("T")[0];
+dateInput.min = today;
+dateInput.value = today;
+
+document.getElementById("bookForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const user = JSON.parse(localStorage.getItem("geet_user") || '{"email":"traveler@geetairlines.com","name":"Traveler"}');
+  const booking = {
+    id: Date.now(),
+    flightnumber: current.flightnumber,
+    provider: current.provider,
+    source: current.source,
+    destination: current.destination,
+    price: current.price,
+    date: dateInput.value,
+    time: document.getElementById("ftime").value,
+    customerName: user.name,
+    customerEmail: user.email
+  };
+  
+  const bookings = JSON.parse(localStorage.getItem("geet_bookings") || "[]");
+  bookings.push(booking);
+  localStorage.setItem("geet_bookings", JSON.stringify(bookings));
+  
+  window.location.href = `summary.html?bid=${booking.id}`;
+});
+</script>
+</body>
+</html>

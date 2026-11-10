@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1618">
+  <title>Add Flight | Geet Airlines</title>
+  <link rel="stylesheet" href="css/geet.css">
+</head>
+<body class="departure-page">
+<div class="departure-shell">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Geet Airlines home">
+      <svg class="brand-mark" viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+      <span>GEET AIRLINES</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Flights</a>
+      <a href="viewflights.html">All flights</a>
+      <a href="contact.html">Contact</a>
+      <a class="active" href="addflights.html">Add flights</a>
+      <a href="viewbookings.html">Bookings</a>
+      <a class="logout-link" href="login.html"><span aria-hidden="true">↗</span> Sign In</a>
+    </nav>
+  </header>
+  <main class="inner-main">
+    <div class="page-actions">
+      <h1 class="page-title" style="margin:0">Add Flight</h1>
+      <a class="geet-btn secondary" href="viewflights.html" style="width:auto;padding:0 20px">View All Flights</a>
+    </div>
+    <div id="afNotice" class="page-notice success" style="display:none">Flight added successfully!</div>
+    <form class="form-card" id="addFlightForm">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="fnumber">Flight number</label>
+          <input type="text" id="fnumber" required placeholder="e.g. AI-202">
+        </div>
+        <div class="form-field">
+          <label for="fprovider">Provider</label>
+          <select id="fprovider">
+            <option value="Air India">Air India</option>
+            <option value="IndiGo">IndiGo</option>
+            <option value="SpiceJet">SpiceJet</option>
+            <option value="Vistara">Vistara</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="fsource">Source</label>
+          <select id="fsource">
+            <option value="Delhi">Delhi</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Pune">Pune</option>
+            <option value="Jaipur">Jaipur</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="fdest">Destination</label>
+          <select id="fdest">
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Pune">Pune</option>
+            <option value="Jaipur">Jaipur</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="fduration">Total flight time</label>
+          <input type="text" id="fduration" required placeholder="e.g. 2h 30m">
+        </div>
+        <div class="form-field">
+          <label for="price">Price (₹)</label>
+          <input type="number" id="price" required min="0" step="1" placeholder="e.g. 4500">
+        </div>
+      </div>
+      <div class="form-submit-row">
+        <button class="geet-btn" type="submit">Save Flight</button>
+        <a class="geet-btn secondary" href="viewflights.html">Cancel</a>
+      </div>
+    </form>
+  </main>
+  <footer class="site-footer"><span>Geet Airlines</span><span>Plan well. Fly easy.</span></footer>
+</div>
+
+<script>
+const DEFAULT_FLIGHTS = [
+    { id: 1, flightnumber: "AI101", provider: "Air India", source: "Delhi", destination: "Mumbai", duration: "2h 10m", price: 5499 },
+    { id: 2, flightnumber: "6E205", provider: "IndiGo", source: "Mumbai", destination: "Bengaluru", duration: "1h 45m", price: 4299 },
+    { id: 3, flightnumber: "SG312", provider: "SpiceJet", source: "Delhi", destination: "Jaipur", duration: "1h 00m", price: 2499 },
+    { id: 4, flightnumber: "UK810", provider: "Vistara", source: "Delhi", destination: "Bengaluru", duration: "2h 45m", price: 6800 },
+    { id: 5, flightnumber: "AI402", provider: "Air India", source: "Mumbai", destination: "Chennai", duration: "2h 00m", price: 4800 },
+    { id: 6, flightnumber: "6E508", provider: "IndiGo", source: "Hyderabad", destination: "Kolkata", duration: "2h 15m", price: 5120 }
+];
+
+document.getElementById("addFlightForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const saved = localStorage.getItem("geet_flights");
+  const flights = saved ? JSON.parse(saved) : DEFAULT_FLIGHTS;
+  
+  const newFlight = {
+    id: Date.now(),
+    flightnumber: document.getElementById("fnumber").value,
+    provider: document.getElementById("fprovider").value,
+    source: document.getElementById("fsource").value,
+    destination: document.getElementById("fdest").value,
+    duration: document.getElementById("fduration").value,
+    price: Number(document.getElementById("price").value)
+  };
+  
+  flights.push(newFlight);
+  localStorage.setItem("geet_flights", JSON.stringify(flights));
+  
+  document.getElementById("afNotice").style.display = "block";
+  document.getElementById("addFlightForm").reset();
+  setTimeout(() => { window.location.href = "viewflights.html"; }, 1000);
+});
+</script>
+</body>
+</html>

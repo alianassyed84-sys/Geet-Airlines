@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1618">
+  <title>Bookings | Geet Airlines</title>
+  <link rel="stylesheet" href="css/geet.css">
+</head>
+<body class="departure-page">
+<div class="departure-shell">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Geet Airlines home">
+      <svg class="brand-mark" viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+      <span>GEET AIRLINES</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Flights</a>
+      <a href="viewflights.html">All flights</a>
+      <a href="contact.html">Contact</a>
+      <a href="addflights.html">Add flights</a>
+      <a class="active" href="viewbookings.html">Bookings</a>
+      <a class="logout-link" href="login.html"><span aria-hidden="true">↗</span> Sign In</a>
+    </nav>
+  </header>
+  <main class="inner-main" style="max-width:100%">
+    <div class="results-heading">
+      <h1 class="page-title" style="margin:0">Bookings</h1>
+      <span class="results-count" style="margin-left:auto">Showing <strong id="bookingCount">0</strong> reservations</span>
+    </div>
+    <div class="data-table-wrap" style="margin-top:16px">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th scope="col">S.No</th>
+            <th scope="col">Flight No.</th>
+            <th scope="col">Provider</th>
+            <th scope="col">Source</th>
+            <th scope="col">Destination</th>
+            <th scope="col" style="text-align:right">Price</th>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Email</th>
+          </tr>
+        </thead>
+        <tbody id="bookingsList">
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <footer class="site-footer"><span>Geet Airlines</span><span>Plan well. Fly easy.</span></footer>
+</div>
+
+<script>
+const DEFAULT_BOOKINGS = [
+  { id: 101, flightnumber: "AI101", provider: "Air India", source: "Delhi", destination: "Mumbai", price: 5499, date: "2026-11-15", time: "09:00", customerName: "Aman Sharma", customerEmail: "aman@example.com" },
+  { id: 102, flightnumber: "6E205", provider: "IndiGo", source: "Mumbai", destination: "Bengaluru", price: 4299, date: "2026-11-18", time: "14:30", customerName: "Priya Patel", customerEmail: "priya@example.com" }
+];
+
+function getBookings() {
+  const saved = localStorage.getItem("geet_bookings");
+  if (!saved) {
+    localStorage.setItem("geet_bookings", JSON.stringify(DEFAULT_BOOKINGS));
+    return DEFAULT_BOOKINGS;
+  }
+  return JSON.parse(saved);
+}
+
+function render() {
+  const bookings = getBookings();
+  document.getElementById("bookingCount").textContent = bookings.length;
+  const tbody = document.getElementById("bookingsList");
+  if (bookings.length === 0) {
+    tbody.innerHTML = '<tr><td class="empty-state" colspan="10">No bookings yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = bookings.map((b, i) => `
+    <tr>
+      <td class="col-serial">${String(i + 1).padStart(2, '0')}</td>
+      <td class="col-mono">${b.flightnumber}</td>
+      <td>${b.provider}</td>
+      <td>${b.source}</td>
+      <td>${b.destination}</td>
+      <td class="col-price">₹ ${Number(b.price).toLocaleString('en-IN')}</td>
+      <td class="col-mono" style="font-size:13px">${b.date}</td>
+      <td class="col-mono" style="font-size:13px">${b.time}</td>
+      <td>${b.customerName}</td>
+      <td style="font-size:13px;color:var(--muted)">${b.customerEmail}</td>
+    </tr>
+  `).join("");
+}
+
+render();
+</script>
+</body>
+</html>
