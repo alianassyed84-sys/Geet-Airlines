@@ -100,5 +100,18 @@ public final class DatabaseConfig {
                 System.err.println("Could not auto-create tables: " + initErr.getMessage());
             }
         }
+        // Ensure passport and passenger columns exist in bookingmaster
+        try (Statement alter = conn.createStatement()) {
+            alter.execute("ALTER TABLE bookingmaster ADD COLUMN IF NOT EXISTS passenger_name VARCHAR(120)");
+            alter.execute("ALTER TABLE bookingmaster ADD COLUMN IF NOT EXISTS passport_no VARCHAR(40)");
+            alter.execute("ALTER TABLE bookingmaster ADD COLUMN IF NOT EXISTS nationality VARCHAR(60)");
+            alter.execute("ALTER TABLE bookingmaster ADD COLUMN IF NOT EXISTS dob VARCHAR(30)");
+            alter.execute("ALTER TABLE bookingmaster ADD COLUMN IF NOT EXISTS gender VARCHAR(10)");
+            alter.execute("ALTER TABLE bookingmaster ADD COLUMN IF NOT EXISTS seat VARCHAR(10)");
+            alter.execute("ALTER TABLE bookingmaster ADD COLUMN IF NOT EXISTS cabin_class VARCHAR(30)");
+            alter.execute("ALTER TABLE bookingmaster ADD COLUMN IF NOT EXISTS meal VARCHAR(50)");
+            alter.execute("ALTER TABLE bookingmaster ADD COLUMN IF NOT EXISTS contact_phone VARCHAR(30)");
+            alter.execute("ALTER TABLE bookingmaster ADD COLUMN IF NOT EXISTS contact_email VARCHAR(254)");
+        } catch (Exception ignored) { }
     }
 }
