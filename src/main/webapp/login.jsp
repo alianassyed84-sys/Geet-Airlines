@@ -1,61 +1,40 @@
-<%-- 
-    Document   : login
-    Created on : Apr 21, 2017, 6:06:19 PM
-    Author     : Gursangeet
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1618">
   <title>Sign In | Geet Airlines</title>
-  <meta name="description" content="website description" />
-  <meta name="keywords" content="website keywords, website keywords" />
-  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
-  <link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-  <link href="css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
-  <link href="css/login.css" rel="stylesheet" type="text/css"/> 
-  <!-- modernizr enables HTML5 elements and feature detects -->
+  <link rel="stylesheet" href="css/geet.css">
 </head>
-
-<body id="main">
-    <div>
-<div class="login-box">
-      <div class="login-logo">
-        <a href="javascript:;"><b>Geet Airlines</b></a>
-      </div><!-- /.login-logo -->
-      <div class="login-box-body" style="background: #333;">
-        <p class="login-box-msg">Sign in to start your session</p>
-        <h5><span class="text-danger text-bold" >${error}<%session.removeAttribute("error");%></span></h5>
-        <form action="login" method="post">
-          <div class="form-group has-feedback">
-            <input type="email" name="email" required class="form-control" placeholder="Email">
-            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-          </div>
-          <div class="form-group has-feedback">
-            <input type="password" name="password" required class="form-control" placeholder="Password">
-            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-          </div>
-          <div class="row">
-            <div class="col-xs-8">
-                <label>
-                  <input type="checkbox"> Remember Me
-                </label>
-            </div><!-- /.col -->
-            <div class="col-xs-4">
-              <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
-            </div><!-- /.col -->
-          </div>
-        </form>
-        <a href="register.jsp" class="text-center">Register a new membership</a>
-
-      </div><!-- /.login-box-body -->
-    </div>
-    
-    </div><!--close main-->
-     
-  <!-- javascript at the bottom for fast page loading -->
-  <script type="text/javascript" src="js/jquery.min.js"></script>
-  
+<body>
+<div class="auth-shell">
+  <div class="auth-card">
+    <a class="auth-brand" href="login.jsp" aria-label="Geet Airlines home">
+      <svg viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+      <span>GEET AIRLINES</span>
+    </a>
+    <h1 class="auth-title">Sign In</h1>
+    <% String err = (String) session.getAttribute("error");
+       if (err != null && !err.isEmpty()) { session.removeAttribute("error"); %>
+    <p class="auth-notice"><%= err %></p>
+    <% } %>
+    <form action="login" method="post">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="••••••••">
+        </div>
+      </div>
+      <button class="geet-btn" type="submit">Sign In</button>
+    </form>
+    <p class="auth-link"><a href="register.jsp">Create a new account →</a></p>
+  </div>
+</div>
 </body>
 </html>

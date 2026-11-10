@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1618">
+  <title>Sign In | Geet Airlines</title>
+  <link rel="stylesheet" href="css/geet.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div class="auth-card">
+    <a class="auth-brand" href="index.html" aria-label="Geet Airlines home">
+      <svg viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+      <span>GEET AIRLINES</span>
+    </a>
+    <h1 class="auth-title">Sign In</h1>
+    <div id="authNotice" class="auth-notice" style="display:none"></div>
+    <form id="loginForm">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com" value="test@geetairlines.com">
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="••••••••" value="Password123!">
+        </div>
+      </div>
+      <button class="geet-btn" type="submit">Sign In</button>
+    </form>
+    <p class="auth-link"><a href="register.html">Create a new account →</a></p>
+    <p class="auth-link" style="margin-top:10px"><a href="index.html">← Back to Flights</a></p>
+  </div>
+</div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  localStorage.setItem("geet_user", JSON.stringify({ email: email, name: email.split("@")[0] }));
+  window.location.href = "index.html";
+});
+</script>
+</body>
+</html>

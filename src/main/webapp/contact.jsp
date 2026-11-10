@@ -1,102 +1,72 @@
-<%-- 
-    Document   : contact
-    Created on : Apr 21, 2017, 1:59:59 PM
-    Author     : Gursangeet
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <title>Contact Us</title>
-  <meta name="description" content="website description" />
-  <meta name="keywords" content="website keywords, website keywords" />
-  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
-  <link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-  <link rel="stylesheet" type="text/css" href="css/style.css" />
-  <!-- modernizr enables HTML5 elements and feature detects -->
-  <script type="text/javascript" src="js/modernizr-1.5.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1618">
+  <title>Contact Us | Geet Airlines</title>
+  <link rel="stylesheet" href="css/geet.css">
 </head>
-
-<body>
-  <div id="main">
-                  <%
-                String userid = (String) session.getAttribute("userid");
-                String usertype = (String) session.getAttribute("usertype");
-                int utype = Integer.parseInt(usertype);
-                if (userid != null && userid != "") {
-                  // if (utype == 1) {
-            %>
-    <header>
-	  <div id="banner">
-	    <div id="welcome">
-	      <h2>Geet Airlines</h2>
-	    </div><!--close welcome-->			  	
-	  </div><!--close banner-->	
-	</header>
-
-	<nav>
-	  <div id="menubar">
-        <ul id="nav">
-          <li ><a href="home.jsp">Home</a></li>
-          <li><a href="viewflights.jsp">All Flights</a></li>
-          <li class="current"><a href="contact.jsp">Contact Us</a></li>
-                        <%if(utype == 1) {%>
-                        <li ><a href="addflights.jsp">Add flights</a></li>
-                        <li><a href="viewbookings.jsp">View bookings</a></li>
-                            <%}%>
-              
-          <li><a href="logout">Logout</a></li>
-        </ul>
-      </div><!--close menubar-->	
-	</nav>
-    
-	<div id="site_content">	
-		
-
-	  <div class="sidebar_container">       
-       </div><!--close sidebar_container-->	
-	
-	  <div id="content">
-        <div class="content_item">
-             <h5><span style="font-size: 23px;color: mediumvioletred;">${success}</span></h5><%session.removeAttribute("success");%>    
-             <h5 class="text-danger">${error}</h5><%session.removeAttribute("error");%>
-		  <div class="form_settings">
-                     <h1>Contact Us   </h1> 
-            <p style="font-size:14px;padding-bottom: 15px;">Leave a message. We will be happy to help you.</p>           
-            
-            <form method="post" action="contactus">	
-                
-            <p><span>Name</span><input class="contact" type="text" name="name" required value="" /></p>
-            <p><span>Email Address</span><input class="contact" type="email" name="email" required value="" /></p>
-			<p><span>Message</span><textarea class="contact textarea" rows="8" cols="50" name="message"></textarea></p>
-            
-			
-            <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" name="contact_submitted" value="Send" /></p>
-          </form></div><!--close form_settings-->
-		</div><!--close content_item-->
-      </div><!--close content-->   
-	</div><!--close site_content-->  	
-  
-    <footer>
-	  <a href="home.jsp">Home</a> | <a href="viewflights.jsp">All Flights</a> | <a href="contact.jsp">Contact</a><br/><br/>
-    </footer>   
-  
-  <!--close main-->
-
-  <!-- javascript at the bottom for fast page loading -->
-  <script type="text/javascript" src="js/jquery.min.js"></script>
-  <script type="text/javascript" src="js/image_slide.js"></script>
-      <%
-                    //} else {
-                      //  out.print("<div style='padding: 200px 0px 0px 520px;'><h1><span style='color:white;font-size:45px;'>Login as admin  </span></h1><br><div  style='padding: 0px 0px 0px 90px;'><div class='button_small'><a style='padding-left:20px;' href='login.jsp' >Login</a></div></div></div>");
-                   // }
-                } 
-                else {
-                    out.print("<div style='padding: 200px 0px 0px 520px;'><h1><span style='color:white;font-size:45px;'>Session expired  </span></h1><br><div  style='padding: 0px 0px 0px 90px;'><div class='button_small'><a style='padding-left:20px;' href='login.jsp' >Login</a></div></div></div>");
-                }
-            %>
-  </div>
+<body class="departure-page">
+<%
+  String userId = (String) session.getAttribute("userid");
+  if (userId == null || userId.trim().isEmpty()) {
+    response.sendRedirect("login.jsp"); return;
+  }
+  boolean isAdmin = "1".equals(String.valueOf(session.getAttribute("usertype")));
+%>
+<div class="departure-shell">
+  <header class="topbar">
+    <a class="brand" href="home.jsp" aria-label="Geet Airlines home">
+      <svg class="brand-mark" viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+      <span>GEET AIRLINES</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="home.jsp">Flights</a>
+      <a href="viewflights.jsp">All flights</a>
+      <a class="active" href="contact.jsp">Contact</a>
+      <% if (isAdmin) { %><a href="addflights.jsp">Add flights</a><a href="viewbookings.jsp">Bookings</a><% } %>
+      <a class="logout-link" href="logout"><span aria-hidden="true">↗</span> Logout</a>
+    </nav>
+  </header>
+  <main class="inner-main">
+    <h1 class="page-title">Contact Us</h1>
+    <%
+      String suc = (String) session.getAttribute("success");
+      String err = (String) session.getAttribute("error");
+      if (suc != null && !suc.isEmpty()) { session.removeAttribute("success"); %>
+    <p class="page-notice success"><%= suc %></p>
+    <% } if (err != null && !err.isEmpty()) { session.removeAttribute("error"); %>
+    <p class="page-notice error"><%= err %></p>
+    <% } %>
+    <div class="contact-wrap">
+      <p style="color:var(--muted);margin:0 0 20px;font-size:13px;letter-spacing:.04em">Leave a message — we will be happy to help you.</p>
+      <form class="form-card" method="post" action="contactus">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="cname">Name</label>
+            <input type="text" id="cname" name="name" required placeholder="Your name">
+          </div>
+          <div class="form-field">
+            <label for="cemail">Email address</label>
+            <input type="email" id="cemail" name="email" required placeholder="you@example.com">
+          </div>
+          <div class="form-field">
+            <label for="cmsg">Message</label>
+            <textarea id="cmsg" name="message" rows="5" placeholder="How can we help?"></textarea>
+          </div>
+        </div>
+        <div class="form-submit-row">
+          <button class="geet-btn" type="submit">Send Message</button>
+        </div>
+      </form>
+    </div>
+  </main>
+  <footer class="site-footer"><span>Geet Airlines</span><span>Plan well. Fly easy.</span></footer>
+</div>
 </body>
 </html>

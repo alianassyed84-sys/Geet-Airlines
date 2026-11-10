@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1618">
+  <title>Reservation Summary | Geet Airlines</title>
+  <link rel="stylesheet" href="css/geet.css">
+</head>
+<body class="departure-page">
+<div class="departure-shell">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Geet Airlines home">
+      <svg class="brand-mark" viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+      <span>GEET AIRLINES</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Flights</a>
+      <a href="viewflights.html">All flights</a>
+      <a href="contact.html">Contact</a>
+      <a href="addflights.html">Add flights</a>
+      <a href="viewbookings.html">Bookings</a>
+      <a class="logout-link" href="login.html"><span aria-hidden="true">↗</span> Sign In</a>
+    </nav>
+  </header>
+  <main class="inner-main">
+    <p class="confirmed-badge">✓ Reservation confirmed</p>
+    <h1 class="page-title">Booking Summary</h1>
+    <div class="detail-card">
+      <div class="detail-row"><span class="detail-label">Flight Number</span><span id="sFlightNo" class="detail-value col-mono">-</span></div>
+      <div class="detail-row"><span class="detail-label">Provider</span><span id="sProvider" class="detail-value">-</span></div>
+      <div class="detail-row"><span class="detail-label">From</span><span id="sSource" class="detail-value">-</span></div>
+      <div class="detail-row"><span class="detail-label">To</span><span id="sDestination" class="detail-value">-</span></div>
+      <div class="detail-row"><span class="detail-label">Flight Date</span><span id="sDate" class="detail-value">-</span></div>
+      <div class="detail-row"><span class="detail-label">Departure Time</span><span id="sTime" class="detail-value">-</span></div>
+      <div class="detail-row"><span class="detail-label">Total Price</span><span id="sPrice" class="detail-value price-big">-</span></div>
+    </div>
+    <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+      <a class="geet-btn" href="index.html" style="display:inline-flex;width:auto;padding:0 28px">Search More Flights</a>
+      <a class="geet-btn secondary" href="viewbookings.html" style="display:inline-flex;width:auto;padding:0 28px">View All Bookings</a>
+    </div>
+  </main>
+  <footer class="site-footer"><span>Geet Airlines</span><span>Plan well. Fly easy.</span></footer>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const bid = parseInt(params.get("bid"));
+const bookings = JSON.parse(localStorage.getItem("geet_bookings") || "[]");
+const current = bookings.find(b => b.id === bid) || bookings[bookings.length - 1] || {
+  flightnumber: "AI101",
+  provider: "Air India",
+  source: "Delhi",
+  destination: "Mumbai",
+  date: new Date().toISOString().split("T")[0],
+  time: "09:00",
+  price: 5499
+};
+
+document.getElementById("sFlightNo").textContent = current.flightnumber;
+document.getElementById("sProvider").textContent = current.provider;
+document.getElementById("sSource").textContent = current.source;
+document.getElementById("sDestination").textContent = current.destination;
+document.getElementById("sDate").textContent = current.date;
+document.getElementById("sTime").textContent = current.time;
+document.getElementById("sPrice").textContent = "₹ " + Number(current.price).toLocaleString("en-IN");
+</script>
+</body>
+</html>

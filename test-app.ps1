@@ -1,6 +1,6 @@
 # Self-check for Geet Airlines local server
 param (
-    [string]$BaseUrl = "http://localhost:8080"
+    [string]$BaseUrl = "http://localhost:8085"
 )
 
 try {
@@ -15,7 +15,7 @@ try {
     }
 
     $flights = Invoke-WebRequest -Uri "$BaseUrl/viewflights.jsp" -WebSession $session
-    if ($flights.StatusCode -ne 200 -or -not ($flights.Content -match "Flight Booking")) {
+    if ($flights.StatusCode -ne 200 -or -not ($flights.Content -match "All Flights|Flight Booking")) {
         throw "View flights page verification failed"
     }
 

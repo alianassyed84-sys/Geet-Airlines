@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0d1618">
+    <title>Flight search | Geet Airlines</title>
+    <meta name="description" content="Search flights and reserve your next journey with Geet Airlines.">
+    <link rel="stylesheet" href="css/geet.css">
+</head>
+<body class="departure-page">
+<div class="departure-shell">
+    <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Geet Airlines home">
+            <svg class="brand-mark" viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+            <span>GEET AIRLINES</span>
+        </a>
+        <nav class="main-nav" aria-label="Main navigation">
+            <a class="active" href="index.html">Flights</a>
+            <a href="viewflights.html">All flights</a>
+            <a href="contact.html">Contact</a>
+            <a href="addflights.html">Add flights</a>
+            <a href="viewbookings.html">Bookings</a>
+            <a class="logout-link" href="login.html"><span aria-hidden="true">↗</span> Sign In</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="panorama" aria-label="Geet Airlines photo slideshow">
+            <div class="photo-track" id="photoTrack">
+                <figure class="photo-panel is-active"><img src="images/home_1.jpg" alt="Air Canada aircraft climbing into a blue sky"><figcaption>Across the skies</figcaption></figure>
+                <figure class="photo-panel"><img src="images/home_2.jpg" alt="Passenger aircraft lifting off at sunset"><figcaption>Every journey begins</figcaption></figure>
+                <figure class="photo-panel"><img src="images/image-3.jpg" alt="Passenger aircraft cruising above the clouds"><figcaption>Find your horizon</figcaption></figure>
+            </div>
+            <button class="slide-arrow slide-prev" type="button" aria-label="Highlight previous photo">‹</button>
+            <button class="slide-arrow slide-next" type="button" aria-label="Highlight next photo">›</button>
+            <div class="slide-dots" role="group" aria-label="Choose highlighted photo">
+                <button class="is-active" type="button" aria-label="Highlight photo 1" aria-pressed="true"></button>
+                <button type="button" aria-label="Highlight photo 2" aria-pressed="false"></button>
+                <button type="button" aria-label="Highlight photo 3" aria-pressed="false"></button>
+            </div>
+        </section>
+
+        <section class="search-board" aria-label="Search flights">
+            <form id="searchForm" class="search-form">
+                <label class="field"><span>Provider</span>
+                    <select id="fprovider" name="fprovider">
+                        <option value="">Any Provider</option>
+                        <option value="Air India">Air India</option>
+                        <option value="IndiGo">IndiGo</option>
+                        <option value="SpiceJet">SpiceJet</option>
+                        <option value="Vistara">Vistara</option>
+                    </select>
+                </label>
+                <label class="field"><span>Source</span>
+                    <select id="fsource" name="fsource">
+                        <option value="">Any Source</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Bengaluru">Bengaluru</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Jaipur">Jaipur</option>
+                    </select>
+                </label>
+                <label class="field"><span>Destination</span>
+                    <select id="fdestination" name="fdestination">
+                        <option value="">Any Destination</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Bengaluru">Bengaluru</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Jaipur">Jaipur</option>
+                    </select>
+                </label>
+                <button class="search-button" type="submit">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+                    Search
+                </button>
+            </form>
+        </section>
+
+        <section class="results-section" aria-labelledby="resultsHeading">
+            <div class="results-heading">
+                <h1 id="resultsHeading">Flights Results</h1>
+                <span class="sample-label">Active Schedule</span>
+                <span class="results-count">Showing <strong id="flightCount">0</strong> results</span>
+            </div>
+            <div class="table-scroll">
+                <table class="flight-board">
+                    <thead>
+                        <tr>
+                            <th scope="col">S.No</th>
+                            <th scope="col">Flight No.</th>
+                            <th scope="col">Provider</th>
+                            <th scope="col">Source</th>
+                            <th scope="col">Destination</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Duration</th>
+                            <th scope="col">Book</th>
+                        </tr>
+                    </thead>
+                    <tbody id="flightsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer"><span>Geet Airlines</span><span>Plan well. Fly easy.</span></footer>
+</div>
+
+<script>
+const DEFAULT_FLIGHTS = [
+    { id: 1, flightnumber: "AI101", provider: "Air India", source: "Delhi", destination: "Mumbai", duration: "2h 10m", price: 5499 },
+    { id: 2, flightnumber: "6E205", provider: "IndiGo", source: "Mumbai", destination: "Bengaluru", duration: "1h 45m", price: 4299 },
+    { id: 3, flightnumber: "SG312", provider: "SpiceJet", source: "Delhi", destination: "Jaipur", duration: "1h 00m", price: 2499 },
+    { id: 4, flightnumber: "UK810", provider: "Vistara", source: "Delhi", destination: "Bengaluru", duration: "2h 45m", price: 6800 },
+    { id: 5, flightnumber: "AI402", provider: "Air India", source: "Mumbai", destination: "Chennai", duration: "2h 00m", price: 4800 },
+    { id: 6, flightnumber: "6E508", provider: "IndiGo", source: "Hyderabad", destination: "Kolkata", duration: "2h 15m", price: 5120 }
+];
+
+function getFlights() {
+    const saved = localStorage.getItem("geet_flights");
+    if (!saved) {
+        localStorage.setItem("geet_flights", JSON.stringify(DEFAULT_FLIGHTS));
+        return DEFAULT_FLIGHTS;
+    }
+    return JSON.parse(saved);
+}
+
+function renderFlights(flights) {
+    const tbody = document.getElementById("flightsTableBody");
+    const countEl = document.getElementById("flightCount");
+    countEl.textContent = flights.length;
+    
+    if (flights.length === 0) {
+        tbody.innerHTML = '<tr><td class="empty-state" colspan="8">No flights match your search criteria. Try different locations.</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = flights.map((f, i) => `
+        <tr>
+            <td class="serial">${String(i + 1).padStart(2, '0')}</td>
+            <td class="flight-number">${f.flightnumber}</td>
+            <td class="provider-cell">${f.provider}</td>
+            <td>${f.source}</td>
+            <td>${f.destination}</td>
+            <td class="price"><span class="rupee">₹</span> ${Number(f.price).toLocaleString('en-IN')}</td>
+            <td class="duration">${f.duration}</td>
+            <td><a class="book-button" href="book.html?id=${f.id}"><span aria-hidden="true">✈</span> Book</a></td>
+        </tr>
+    `).join("");
+}
+
+document.getElementById("searchForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const provider = document.getElementById("fprovider").value;
+    const source = document.getElementById("fsource").value;
+    const dest = document.getElementById("fdestination").value;
+    
+    const all = getFlights();
+    const filtered = all.filter(f => {
+        if (provider && f.provider !== provider) return false;
+        if (source && f.source !== source) return false;
+        if (dest && f.destination !== dest) return false;
+        return true;
+    });
+    renderFlights(filtered);
+});
+
+// Slideshow
+(function () {
+    var panels = Array.prototype.slice.call(document.querySelectorAll('.photo-panel'));
+    var dots = Array.prototype.slice.call(document.querySelectorAll('.slide-dots button'));
+    var active = 0;
+    function selectPhoto(index) {
+        active = (index + panels.length) % panels.length;
+        panels.forEach(function (panel, i) { panel.classList.toggle('is-active', i === active); });
+        dots.forEach(function (dot, i) { dot.classList.toggle('is-active', i === active); dot.setAttribute('aria-pressed', i === active ? 'true' : 'false'); });
+    }
+    document.querySelector('.slide-prev').addEventListener('click', function () { selectPhoto(active - 1); });
+    document.querySelector('.slide-next').addEventListener('click', function () { selectPhoto(active + 1); });
+    dots.forEach(function (dot, i) { dot.addEventListener('click', function () { selectPhoto(i); }); });
+    window.setInterval(function () { selectPhoto(active + 1); }, 6500);
+}());
+
+renderFlights(getFlights());
+</script>
+</body>
+</html>

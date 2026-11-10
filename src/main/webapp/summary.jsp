@@ -1,99 +1,66 @@
-<%-- 
-    Document   : summary
-    Created on : Apr 27, 2017, 9:12:01 PM
-    Author     : Hardeep
---%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Reservation Summary | Geet Airlines</title>
-        <meta name="description" content="website description" />
-        <meta name="keywords" content="website keywords, website keywords" />
-        <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
-        <link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
-        <!-- modernizr enables HTML5 elements and feature detects -->
-        <script type="text/javascript" src="js/modernizr-1.5.min.js"></script>
-        <style>
-            .cc{
-                color:white;
-            }
-        </style>
-    </head>
-
-    <body id="main">
-        <div >
-            <%
-                String ss = (String) session.getAttribute("userid");
-                if (ss != null && ss != "") {
-            %>
-            <header>
-                <div id="banner">
-                    <div id="welcome">
-                        <h2>Geet Airlines</h2>
-                    </div><!--close welcome-->			  	
-                </div><!--close banner-->	
-            </header>
-
-            <nav>
-                <div id="menubar">
-                    <ul id="nav">
-                        <li><a href="home.jsp">Home</a></li>
-                        <li ><a href="viewflights.jsp">All flights</a></li>
-                        <li><a href="contact.jsp">Contact Us</a></li>
-                        <li><a href="logout">Logout</a></li>
-                    </ul>
-                </div><!--close menubar-->	
-            </nav>	
-
-            <div id="site_content">		
-
-                <div class="slideshow">
-                    <ul class="slideshow">
-                        <li class="show"><img width="940" height="300" src="images/home_1.jpg" alt="&quot;Enter your caption here&quot;" /></li>
-                        <li><img width="940" height="300" src="images/home_2.jpg" alt="&quot;Enter your caption here&quot;" /></li>
-                    </ul> 
-                </div><!--close slideshow-->	
-                <sql:setDataSource var="snapshot" driver="${applicationScope.dbDriver}"
-                                   url="${applicationScope.dbUrl}"
-                                   user="${applicationScope.dbUser}" password="${applicationScope.dbPassword}"/>
-
-                <sql:query dataSource="${snapshot}" var="result">
-                    SELECT f.flightnumber,b.flightdate,b.flighttime,f.source,f.destination from bookingmaster b join flightmaster f on b.flightid = f.flightid where b.id = ${bid};
-                </sql:query>
-
-                <div id="content">
-                    <div class="content_item">
-                        <h1>Reservation confirmed</h1>
-                        <c:forEach var="row" items="${result.rows}">
-                        <h3><span class="cc">Flight number : ${row.flightnumber}</span></h3>
-                        <h3><span class="cc">Flight date : ${row.flightdate}</span></h3>
-                        <h3><span class="cc">Flight time : ${row.flighttime}</span></h3>
-                        <h3><span class="cc">Source : ${row.source}</span></h3>
-                        <h3><span class="cc">Destination : ${row.destination}</span></h3>
-                        </c:forEach>    
-                    </div><!--close content_item-->
-
-                </div><!--close content-->   
-
-            </div><!--close site_content-->  	
-            <footer>
-                <a href="home.jsp">Home</a> | <a href="viewflights.jsp">All flights</a> | <a href="contact.jsp">Contact</a><br/><br/>
-            </footer> 
-
-
-
-            <!-- javascript at the bottom for fast page loading -->
-            <script type="text/javascript" src="js/jquery.min.js"></script>
-            <script type="text/javascript" src="js/image_slide.js"></script>
-            <%
-                } else {
-                    out.print("<div style='padding: 200px 0px 0px 520px;'><h1><span style='color:black;font-size:45px;'>session expired</span></h1><br><div  style='padding: 0px 0px 0px 90px;'><div class='button_small'><a style='padding-left:20px;' href='login.jsp' >Login</a></div></div></div>");
-                }
-            %>
-        </div><!--close main-->
-    </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1618">
+  <title>Reservation Summary | Geet Airlines</title>
+  <link rel="stylesheet" href="css/geet.css">
+</head>
+<body class="departure-page">
+<%
+  String ss = (String) session.getAttribute("userid");
+  if (ss == null || ss.trim().isEmpty()) { response.sendRedirect("login.jsp"); return; }
+  boolean isAdmin = "1".equals(String.valueOf(session.getAttribute("usertype")));
+%>
+<sql:setDataSource var="geetDb" driver="${applicationScope.dbDriver}"
+                   url="${applicationScope.dbUrl}" user="${applicationScope.dbUser}"
+                   password="${applicationScope.dbPassword}" />
+<sql:query dataSource="${geetDb}" var="result">
+  SELECT f.flightnumber, b.flightdate, b.flighttime, f.source, f.destination, f.price, f.provider
+  FROM bookingmaster b JOIN flightmaster f ON b.flightid = f.flightid
+  WHERE b.id = ${bid}
+</sql:query>
+<div class="departure-shell">
+  <header class="topbar">
+    <a class="brand" href="home.jsp" aria-label="Geet Airlines home">
+      <svg class="brand-mark" viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+      <span>GEET AIRLINES</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="home.jsp">Flights</a>
+      <a href="viewflights.jsp">All flights</a>
+      <a href="contact.jsp">Contact</a>
+      <% if (isAdmin) { %><a href="addflights.jsp">Add flights</a><a href="viewbookings.jsp">Bookings</a><% } %>
+      <a class="logout-link" href="logout"><span aria-hidden="true">↗</span> Logout</a>
+    </nav>
+  </header>
+  <main class="inner-main">
+    <c:forEach var="row" items="${result.rows}">
+      <p class="confirmed-badge">✓ Reservation confirmed</p>
+      <h1 class="page-title">Booking Summary</h1>
+      <div class="detail-card">
+        <div class="detail-row"><span class="detail-label">Flight Number</span><span class="detail-value col-mono">${row.flightnumber}</span></div>
+        <div class="detail-row"><span class="detail-label">Provider</span><span class="detail-value">${row.provider}</span></div>
+        <div class="detail-row"><span class="detail-label">From</span><span class="detail-value">${row.source}</span></div>
+        <div class="detail-row"><span class="detail-label">To</span><span class="detail-value">${row.destination}</span></div>
+        <div class="detail-row"><span class="detail-label">Flight Date</span><span class="detail-value">${row.flightdate}</span></div>
+        <div class="detail-row"><span class="detail-label">Departure Time</span><span class="detail-value">${row.flighttime}</span></div>
+        <div class="detail-row"><span class="detail-label">Total Price</span><span class="detail-value price-big">₹ ${row.price}</span></div>
+      </div>
+      <div style="margin-top:24px">
+        <a class="geet-btn" href="home.jsp" style="display:inline-flex;width:auto;padding:0 28px">Search More Flights</a>
+      </div>
+    </c:forEach>
+    <c:if test="${result.rowCount == 0}">
+      <p class="page-notice error">Could not find reservation details.</p>
+      <a class="geet-btn" href="home.jsp" style="display:inline-flex;width:auto;padding:0 28px;margin-top:12px">Go Home</a>
+    </c:if>
+  </main>
+  <footer class="site-footer"><span>Geet Airlines</span><span>Plan well. Fly easy.</span></footer>
+</div>
+</body>
 </html>

@@ -1,5 +1,5 @@
 param (
-    [int]$Port = 8080
+    [int]$Port = 8085
 )
 
 $workspace = $PSScriptRoot
@@ -28,4 +28,4 @@ Write-Host "Database: H2 Embedded (file: $dbPath)" -ForegroundColor Gray
 Write-Host "Admin:    Run .\make-admin.ps1 -Email <email>" -ForegroundColor Gray
 Write-Host "Press Ctrl+C to stop the server.`n" -ForegroundColor DarkGray
 
-java -cp $cp LocalTomcat $app $base
+java -cp $cp LocalTomcat $app $base $Port

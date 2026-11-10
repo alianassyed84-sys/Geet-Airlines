@@ -1,10 +1,13 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "outputDirectory": "public",
-  "rewrites": [
+  "cleanUrls": true,
+  "headers": [
     {
-      "source": "/:path*",
-      "destination": "https://geet-airlines-java.onrender.com/:path*"
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
     }
   ]
 }

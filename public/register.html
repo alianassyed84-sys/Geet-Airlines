@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1618">
+  <title>Register | Geet Airlines</title>
+  <link rel="stylesheet" href="css/geet.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div class="auth-card">
+    <a class="auth-brand" href="index.html" aria-label="Geet Airlines home">
+      <svg viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+      <span>GEET AIRLINES</span>
+    </a>
+    <h1 class="auth-title">Create Account</h1>
+    <form id="regForm">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="firstname">Full name</label>
+          <input type="text" id="firstname" name="firstname" required placeholder="Gursangeet Singh">
+        </div>
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="form-field">
+          <label for="address">Address</label>
+          <textarea id="address" name="address" placeholder="Your address (optional)"></textarea>
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required minlength="8" placeholder="At least 8 characters">
+        </div>
+        <div class="form-field">
+          <label for="phone">Phone</label>
+          <input type="text" id="phone" name="phone" required placeholder="+91 98765 43210">
+        </div>
+        <div class="form-field">
+          <label>Gender</label>
+          <div class="radio-group">
+            <label><input type="radio" name="gender" value="M" checked> Male</label>
+            <label><input type="radio" name="gender" value="F"> Female</label>
+            <label><input type="radio" name="gender" value="O"> Other</label>
+          </div>
+        </div>
+      </div>
+      <button class="geet-btn" type="submit">Create Account</button>
+    </form>
+    <p class="auth-link"><a href="login.html">Already have an account? Sign in →</a></p>
+  </div>
+</div>
+
+<script>
+document.getElementById("regForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const name = document.getElementById("firstname").value;
+  const email = document.getElementById("email").value;
+  localStorage.setItem("geet_user", JSON.stringify({ email: email, name: name }));
+  alert("Account created successfully!");
+  window.location.href = "index.html";
+});
+</script>
+</body>
+</html>
