@@ -36,8 +36,9 @@
       <div class="detail-row"><span class="detail-label">Total Price</span><span id="sPrice" class="detail-value price-big">-</span></div>
     </div>
     <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
-      <a class="geet-btn" href="index.html" style="display:inline-flex;width:auto;padding:0 28px">Search More Flights</a>
-      <a class="geet-btn secondary" href="viewbookings.html" style="display:inline-flex;width:auto;padding:0 28px">View All Bookings</a>
+      <a class="geet-btn" id="ticketBtn" href="ticket.html" style="display:inline-flex;width:auto;padding:0 24px">🎟️ View & Download E-Ticket (PDF)</a>
+      <a class="geet-btn secondary" href="index.html" style="display:inline-flex;width:auto;padding:0 24px">Search More Flights</a>
+      <a class="geet-btn secondary" href="viewbookings.html" style="display:inline-flex;width:auto;padding:0 24px">All Bookings</a>
     </div>
   </main>
   <footer class="site-footer"><span>Geet Airlines</span><span>Plan well. Fly easy.</span></footer>
@@ -64,6 +65,7 @@ document.getElementById("sDestination").textContent = current.destination;
 document.getElementById("sDate").textContent = current.date;
 document.getElementById("sTime").textContent = current.time;
 document.getElementById("sPrice").textContent = "₹ " + Number(current.price).toLocaleString("en-IN");
+document.getElementById("ticketBtn").href = "ticket.html?bid=" + (current.id || bid);
 </script>
 </body>
 </html>

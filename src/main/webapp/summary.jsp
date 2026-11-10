@@ -51,8 +51,9 @@
         <div class="detail-row"><span class="detail-label">Departure Time</span><span class="detail-value">${row.flighttime}</span></div>
         <div class="detail-row"><span class="detail-label">Total Price</span><span class="detail-value price-big">₹ ${row.price}</span></div>
       </div>
-      <div style="margin-top:24px">
-        <a class="geet-btn" href="home.jsp" style="display:inline-flex;width:auto;padding:0 28px">Search More Flights</a>
+      <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+        <a class="geet-btn" href="ticket.jsp?bid=${bid}" style="display:inline-flex;width:auto;padding:0 24px">🎟️ View & Download E-Ticket (PDF)</a>
+        <a class="geet-btn secondary" href="home.jsp" style="display:inline-flex;width:auto;padding:0 24px">Search More Flights</a>
       </div>
     </c:forEach>
     <c:if test="${result.rowCount == 0}">

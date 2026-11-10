@@ -42,6 +42,7 @@
             <th scope="col">Time</th>
             <th scope="col">Customer</th>
             <th scope="col">Email</th>
+            <th scope="col" style="text-align:center">Ticket</th>
           </tr>
         </thead>
         <tbody id="bookingsList">
@@ -87,6 +88,9 @@ function render() {
       <td class="col-mono" style="font-size:13px">${b.time}</td>
       <td>${b.customerName}</td>
       <td style="font-size:13px;color:var(--muted)">${b.customerEmail}</td>
+      <td class="col-actions">
+        <a class="tbl-link amber" href="ticket.html?bid=${b.id}">🎟️ Ticket</a>
+      </td>
     </tr>
   `).join("");
 }

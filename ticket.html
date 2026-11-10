@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>E-Ticket & Boarding Pass | Geet Airlines</title>
+    <link rel="stylesheet" href="css/geet.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body { background: #080d0f; color: #222; font-family: 'Manrope', Arial, sans-serif; margin: 0; padding: 20px; }
+        .ticket-wrapper { max-width: 900px; margin: 0 auto; }
+        .action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .action-btn { background: #f7b342; color: #111; font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: filter 0.2s; }
+        .action-btn:hover { filter: brightness(1.1); }
+        .action-btn.secondary { background: #1a2528; color: #eee; border: 1px solid #343b3d; }
+        .action-btn.secondary:hover { border-color: #f7b342; color: #f7b342; }
+
+        .boarding-pass-sheet { background: #fff; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); overflow: hidden; position: relative; color: #1a1a1a; margin-bottom: 30px; }
+        .sheet-header { background: #0c1315; color: #fff; padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f7b342; }
+        .sheet-brand { display: flex; align-items: center; gap: 12px; }
+        .sheet-brand svg { width: 44px; height: 34px; fill: #f7b342; stroke: #f7b342; }
+        .sheet-brand-text { font-size: 20px; font-weight: 800; letter-spacing: 0.3em; color: #fff; }
+        .sheet-title-badge { text-align: right; }
+        .sheet-title-badge h2 { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: 0.15em; color: #f7b342; text-transform: uppercase; }
+        .sheet-title-badge p { margin: 4px 0 0; font-size: 11px; color: #9da5a2; font-family: 'DM Mono', monospace; }
+
+        .ticket-body { display: grid; grid-template-columns: 2.2fr 1fr; border-bottom: 2px dashed #ccc; }
+        .ticket-main { padding: 28px 32px; border-right: 2px dashed #ccc; position: relative; }
+        .ticket-stub { padding: 28px 24px; background: #fbfbf9; display: flex; flex-direction: column; justify-content: space-between; }
+
+        .passenger-bar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #eee; }
+        .info-cell label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #777; margin-bottom: 4px; }
+        .info-cell .val { font-size: 15px; font-weight: 800; color: #111; }
+        .info-cell .val.mono { font-family: 'DM Mono', monospace; }
+
+        .route-hero { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; background: #f5f6f4; border-radius: 8px; padding: 18px 24px; }
+        .city-block { text-align: left; }
+        .city-block.right { text-align: right; }
+        .city-code { font-size: 32px; font-weight: 900; letter-spacing: 0.05em; color: #0c1315; font-family: 'DM Mono', monospace; line-height: 1; }
+        .city-name { font-size: 13px; font-weight: 600; color: #555; margin-top: 4px; }
+        .route-plane-divider { display: flex; flex-direction: column; align-items: center; flex: 1; padding: 0 20px; }
+        .plane-path { width: 100%; height: 2px; background: #d0d4d2; position: relative; margin: 8px 0; }
+        .plane-path::after { content: '✈'; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); color: #f7b342; font-size: 16px; }
+        .flight-time-badge { font-size: 11px; font-weight: 700; color: #666; font-family: 'DM Mono', monospace; }
+
+        .flight-specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; background: #fff; }
+        .spec-box { border-left: 3px solid #0c1315; padding-left: 10px; }
+        .spec-box.highlight { border-color: #f7b342; }
+        .spec-box label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.1em; display: block; }
+        .spec-box .val { font-size: 17px; font-weight: 800; color: #111; font-family: 'DM Mono', monospace; margin-top: 2px; }
+
+        .baggage-section { background: #f8faf9; border: 1px solid #e1e7e4; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; }
+        .baggage-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: #2d553e; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .baggage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .bag-item { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; color: #333; }
+        .bag-icon { font-size: 20px; }
+        .bag-desc strong { color: #000; font-size: 13px; }
+        .bag-desc p { margin: 2px 0 0; font-size: 11px; color: #666; }
+
+        .stub-header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 12px; margin-bottom: 14px; }
+        .stub-header h3 { margin: 0; font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: #333; text-transform: uppercase; }
+        .stub-header p { margin: 3px 0 0; font-size: 10px; color: #777; font-family: 'DM Mono', monospace; }
+        .stub-qr { display: flex; justify-content: center; margin: 14px 0; }
+        .stub-qr img { width: 130px; height: 130px; border-radius: 6px; border: 1px solid #eee; padding: 4px; background: #fff; }
+        .stub-data { font-size: 11px; line-height: 1.6; }
+        .stub-data-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dotted #ddd; }
+        .stub-data-row span:first-child { color: #777; font-weight: 600; }
+        .stub-data-row span:last-child { color: #111; font-weight: 800; }
+
+        .ticket-footer { background: #fafaf8; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #666; border-top: 1px solid #eee; flex-wrap: wrap; gap: 10px; }
+        .footer-note { max-width: 600px; line-height: 1.4; }
+        .pnr-stamp { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 800; color: #0c1315; padding: 6px 14px; background: #f7b34233; border: 1px solid #f7b342; border-radius: 4px; }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .action-bar, .site-footer { display: none !important; }
+            .ticket-wrapper { max-width: 100%; margin: 0; }
+            .boarding-pass-sheet { box-shadow: none; border: 1px solid #aaa; margin: 0; page-break-inside: avoid; }
+        }
+        @media (max-width: 768px) {
+            .ticket-body { grid-template-columns: 1fr; }
+            .ticket-main { border-right: none; border-bottom: 2px dashed #ccc; }
+            .route-hero { flex-direction: column; text-align: center; gap: 12px; }
+            .city-block.right { text-align: center; }
+            .flight-specs { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="ticket-wrapper">
+    <div class="action-bar">
+        <a class="action-btn secondary" href="index.html">← Back to Flights</a>
+        <div style="display:flex;gap:10px">
+            <button class="action-btn secondary" onclick="window.print()">🖨️ Print Ticket</button>
+            <button class="action-btn" id="downloadPdfBtn">📄 Download PDF E-Ticket</button>
+        </div>
+    </div>
+
+    <div class="boarding-pass-sheet" id="boardingPassSheet">
+        <div class="sheet-header">
+            <div class="sheet-brand">
+                <svg viewBox="0 0 64 48" aria-hidden="true"><path d="M4 31 55 2 35 42 27 29 4 31Z"/><path d="m27 29 14 5 14-32"/></svg>
+                <span class="sheet-brand-text">GEET AIRLINES</span>
+            </div>
+            <div class="sheet-title-badge">
+                <h2>Boarding Pass & E-Ticket</h2>
+                <p>ELECTRONIC TICKET RECEIPT • IATA CONFIRMED</p>
+            </div>
+        </div>
+
+        <div class="ticket-body">
+            <div class="ticket-main">
+                <div class="passenger-bar">
+                    <div class="info-cell">
+                        <label>Passenger Name</label>
+                        <div class="val" id="pPassenger" style="text-transform:uppercase">-</div>
+                    </div>
+                    <div class="info-cell">
+                        <label>Booking Ref (PNR)</label>
+                        <div class="val mono" id="pPnr" style="color:#d97706">-</div>
+                    </div>
+                    <div class="info-cell">
+                        <label>Status</label>
+                        <div class="val" style="color:#15803d">CONFIRMED</div>
+                    </div>
+                </div>
+
+                <div class="route-hero">
+                    <div class="city-block">
+                        <div class="city-code" id="pSourceCode">DEL</div>
+                        <div class="city-name" id="pSourceName">Delhi</div>
+                    </div>
+                    <div class="route-plane-divider">
+                        <div class="flight-time-badge" id="pDuration">2h 10m Non-stop</div>
+                        <div class="plane-path"></div>
+                        <div class="flight-time-badge" id="pProviderNo">Air India AI101</div>
+                    </div>
+                    <div class="city-block right">
+                        <div class="city-code" id="pDestCode">BOM</div>
+                        <div class="city-name" id="pDestName">Mumbai</div>
+                    </div>
+                </div>
+
+                <div class="flight-specs">
+                    <div class="spec-box highlight">
+                        <label>Flight Date</label>
+                        <div class="val" id="pDate">-</div>
+                    </div>
+                    <div class="spec-box highlight">
+                        <label>Boarding Time</label>
+                        <div class="val" id="pTime">-</div>
+                    </div>
+                    <div class="spec-box highlight">
+                        <label>Gate</label>
+                        <div class="val" id="pGate">G14</div>
+                    </div>
+                    <div class="spec-box highlight">
+                        <label>Seat</label>
+                        <div class="val" id="pSeat" style="color:#b45309">12A</div>
+                    </div>
+                </div>
+
+                <div class="baggage-section">
+                    <div class="baggage-title">
+                        <span>🧳</span> Standard Baggage Allowance Included
+                    </div>
+                    <div class="baggage-grid">
+                        <div class="bag-item">
+                            <span class="bag-icon">🎒</span>
+                            <div class="bag-desc">
+                                <strong>Cabin Baggage: 1 Piece (7 kg)</strong>
+                                <p>Max size 55 x 35 x 25 cm (Handbag / Laptop)</p>
+                            </div>
+                        </div>
+                        <div class="bag-item">
+                            <span class="bag-icon">🧳</span>
+                            <div class="bag-desc">
+                                <strong>Check-in Baggage: 15 kg</strong>
+                                <p>1 Bag up to 15 kg (Free allowance)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ticket-stub">
+                <div>
+                    <div class="stub-header">
+                        <h3>Boarding Stub</h3>
+                        <p id="stubFlight">AI101</p>
+                    </div>
+
+                    <div class="stub-qr">
+                        <img id="qrImage" src="" alt="Scan QR for Boarding Verification">
+                    </div>
+
+                    <div class="stub-data">
+                        <div class="stub-data-row"><span>Passenger:</span><span id="stubPass">-</span></div>
+                        <div class="stub-data-row"><span>Route:</span><span id="stubRoute">-</span></div>
+                        <div class="stub-data-row"><span>Date:</span><span id="stubDate">-</span></div>
+                        <div class="stub-data-row"><span>Seat:</span><span id="stubSeat" style="color:#b45309">12A</span></div>
+                        <div class="stub-data-row"><span>Gate:</span><span id="stubGate">G14</span></div>
+                        <div class="stub-data-row"><span>Fare Paid:</span><span id="stubPrice">₹ 5,499</span></div>
+                    </div>
+                </div>
+
+                <div style="text-align:center;margin-top:16px;font-family:'DM Mono',monospace;font-size:9px;color:#888;letter-spacing:0.1em">
+                    KEEP STUB FOR SECURITY
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-footer">
+            <div class="footer-note">
+                <strong>Important Notice:</strong> Gate closes 25 minutes prior to departure. Please present this e-ticket along with a government-issued photo ID at security and check-in counters.
+            </div>
+            <div class="pnr-stamp" id="footerPnr">PNR: GA-8429K</div>
+        </div>
+    </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const bid = parseInt(params.get("bid"));
+const bookings = JSON.parse(localStorage.getItem("geet_bookings") || "[]");
+const current = bookings.find(b => b.id === bid) || bookings[bookings.length - 1] || {
+    id: 101,
+    flightnumber: "AI101",
+    provider: "Air India",
+    source: "Delhi",
+    destination: "Mumbai",
+    price: 5499,
+    date: new Date().toISOString().split("T")[0],
+    time: "09:00",
+    customerName: "Aman Sharma",
+    customerEmail: "aman@example.com"
+};
+
+const pnr = "GA-" + String((current.id || 101) % 9000 + 1000) + "K";
+const seat = String(((current.id || 101) * 3 % 28) + 1) + "A";
+const gate = "G" + String(((current.id || 101) % 12) + 2);
+const srcCode = (current.source || "DEL").substring(0,3).toUpperCase();
+const dstCode = (current.destination || "BOM").substring(0,3).toUpperCase();
+
+document.getElementById("pPassenger").textContent = current.customerName || "Traveler";
+document.getElementById("pPnr").textContent = pnr;
+document.getElementById("pSourceCode").textContent = srcCode;
+document.getElementById("pSourceName").textContent = current.source;
+document.getElementById("pDestCode").textContent = dstCode;
+document.getElementById("pDestName").textContent = current.destination;
+document.getElementById("pProviderNo").textContent = (current.provider || "") + " " + current.flightnumber;
+document.getElementById("pDate").textContent = current.date;
+document.getElementById("pTime").textContent = current.time;
+document.getElementById("pGate").textContent = gate;
+document.getElementById("pSeat").textContent = seat;
+
+document.getElementById("stubFlight").textContent = (current.provider || "") + " • " + current.flightnumber;
+document.getElementById("stubPass").textContent = (current.customerName || "Traveler").split(" ")[0];
+document.getElementById("stubRoute").textContent = srcCode + " → " + dstCode;
+document.getElementById("stubDate").textContent = current.date;
+document.getElementById("stubSeat").textContent = seat;
+document.getElementById("stubGate").textContent = gate;
+document.getElementById("stubPrice").textContent = "₹ " + Number(current.price).toLocaleString("en-IN");
+document.getElementById("footerPnr").textContent = "PNR: " + pnr;
+
+const qrData = encodeURIComponent(`GEETAIRLINES|PNR:${pnr}|FLIGHT:${current.flightnumber}|${srcCode}-${dstCode}|SEAT:${seat}|PASS:${current.customerName}`);
+document.getElementById("qrImage").src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=4&data=${qrData}`;
+
+document.getElementById("downloadPdfBtn").addEventListener("click", function () {
+    const element = document.getElementById("boardingPassSheet");
+    const opt = {
+        margin:       [8, 8, 8, 8],
+        filename:     `GeetAirlines_ETicket_${pnr}.pdf`,
+        image:        { type: "jpeg", quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: "mm", format: "a4", orientation: "portrait" }
+    };
+    html2pdf().set(opt).from(element).save();
+});
+</script>
+</body>
+</html>

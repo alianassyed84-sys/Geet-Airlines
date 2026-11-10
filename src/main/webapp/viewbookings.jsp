@@ -22,7 +22,7 @@
                    url="${applicationScope.dbUrl}" user="${applicationScope.dbUser}"
                    password="${applicationScope.dbPassword}" />
 <sql:query dataSource="${geetDb}" var="result">
-  SELECT u.firstname, u.email, f.price, f.provider, f.flightnumber, b.flightdate, b.flighttime, f.source, f.destination
+  SELECT b.id, u.firstname, u.email, f.price, f.provider, f.flightnumber, b.flightdate, b.flighttime, f.source, f.destination
   FROM bookingmaster b JOIN flightmaster f ON b.flightid = f.flightid JOIN usermaster u ON b.userid = u.userid
   ORDER BY b.id DESC
 </sql:query>
@@ -60,6 +60,7 @@
             <th scope="col">Time</th>
             <th scope="col">Customer</th>
             <th scope="col">Email</th>
+            <th scope="col" style="text-align:center">Ticket</th>
           </tr>
         </thead>
         <tbody>
@@ -75,6 +76,9 @@
               <td class="col-mono" style="font-size:13px">${row.flighttime}</td>
               <td>${row.firstname}</td>
               <td style="font-size:13px;color:var(--muted)">${row.email}</td>
+              <td class="col-actions">
+                <a class="tbl-link amber" href="ticket.jsp?bid=${row.id}">🎟️ Ticket</a>
+              </td>
             </tr>
           </c:forEach>
           <c:if test="${result.rowCount == 0}">
