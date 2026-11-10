@@ -7,13 +7,5 @@ services:
     dockerContext: .
     healthCheckPath: /login.jsp
     envVars:
-      - key: AIRLINE_DB_URL
-        sync: false
-      - key: AIRLINE_DB_USER
-        sync: false
-      - key: AIRLINE_DB_PASSWORD
-        sync: false
-      - key: AIRLINE_DB_DRIVER
-        value: com.mysql.cj.jdbc.Driver
       - key: PORT
         value: "8080"

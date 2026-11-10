@@ -10,8 +10,9 @@ public final class DatabaseConfig {
     public static String url(String database) {
         String configured = System.getenv("AIRLINE_DB_URL");
         if (configured != null && !configured.trim().isEmpty()) return configured;
-        return "jdbc:mysql://localhost:3306/" + database
-                + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+        // On cloud/container without external MySQL, fallback to embedded H2 database automatically
+        String tmp = System.getProperty("java.io.tmpdir", "/tmp").replace('\\', '/');
+        return "jdbc:h2:file:" + tmp + "/airline;AUTO_SERVER=TRUE;MODE=MySQL;DB_CLOSE_DELAY=-1";
     }
 
     public static String driver() {
